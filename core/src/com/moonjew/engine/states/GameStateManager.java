@@ -1,8 +1,11 @@
 package com.moonjew.engine.states;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.moonjew.engine.AssetManager;
 
 import java.util.Stack;
@@ -15,6 +18,9 @@ public class GameStateManager  {
     public SpriteBatch sb;
     public ShapeRenderer sr;
 
+    public BitmapFont font;
+    public Skin skin;
+
 
     public GameStateManager(OrthographicCamera cam, SpriteBatch sb) {
         this.states = new Stack<>();
@@ -22,6 +28,8 @@ public class GameStateManager  {
         this.sb = sb;
         this.sr = new ShapeRenderer();
         this.assetManager = new AssetManager();
+        this.skin = new Skin(Gdx.files.internal("metalui/metal-ui.json"));
+//        this.font = new BitmapFont(Gdx.files.internal("font1.fnt"));
     }
 
     public State peek(){
@@ -41,13 +49,37 @@ public class GameStateManager  {
 
     public void update(float delta){
         states.peek().update(delta);
-
     }
 
     public void render(){
         for (State state : states) {
             state.draw(sb);
         }
+    }
+
+    public void transitionTo(final State state){
+        System.out.println("TransitionState IN pushed");
+        this.push(new TransitionState(this, 1, true).setOnFinish(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("TransitionState IN popped");
+                GameStateManager.this.pop();
+                GameStateManager.this.push(state);
+                System.out.println("New state pushed");
+                System.out.println("TransitionState OUT Pushed");
+                GameStateManager.this.transitionOut();
+            }
+        }));
+    }
+
+    private void transitionOut(){
+        this.push(new TransitionState(this, 1, false).setOnFinish(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("TransitionState OUT popped");
+                GameStateManager.this.pop();
+            }
+        }));
     }
 
 

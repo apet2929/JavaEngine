@@ -11,6 +11,7 @@ public class TransitionState extends State {
     private float time;
     private final float duration;
     private final boolean direction;
+    private Runnable onFinish;
     public TransitionState(GameStateManager gsm, float duration, boolean isDirectionIn) {
         super(gsm);
         time = 0f;
@@ -18,13 +19,18 @@ public class TransitionState extends State {
         this.direction = isDirectionIn;
     }
 
+    public TransitionState setOnFinish(Runnable runnable){
+        this.onFinish = runnable;
+        return this;
+    }
+
     @Override
     public void update(float delta) {
         time += delta;
         if(time > duration){
-            System.out.println("Popping Transition!");
-            gsm.pop();
+            this.onFinish.run();
         }
+
     }
 
     @Override

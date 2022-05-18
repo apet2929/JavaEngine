@@ -27,6 +27,7 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void render() {
 //		ScreenUtils.clear(1, 0, 0, 1);
+
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render();
 	}
