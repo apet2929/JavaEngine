@@ -58,27 +58,18 @@ public class GameStateManager  {
     }
 
     public void transitionTo(final State state){
-        System.out.println("TransitionState IN pushed");
-        this.push(new TransitionState(this, 1, true).setOnFinish(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("TransitionState IN popped");
-                GameStateManager.this.pop();
-                GameStateManager.this.push(state);
-                System.out.println("New state pushed");
-                System.out.println("TransitionState OUT Pushed");
-                GameStateManager.this.transitionOut();
-            }
+        this.push(new TransitionState(this, 1, true).setOnFinish(() -> {
+
+            GameStateManager.this.pop();
+            GameStateManager.this.push(state);
+
+            GameStateManager.this.transitionOut();
         }));
     }
 
     private void transitionOut(){
-        this.push(new TransitionState(this, 1, false).setOnFinish(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("TransitionState OUT popped");
-                GameStateManager.this.pop();
-            }
+        this.push(new TransitionState(this, 1, false).setOnFinish(() -> {
+            GameStateManager.this.pop();
         }));
     }
 
