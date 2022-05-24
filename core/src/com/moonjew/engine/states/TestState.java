@@ -32,7 +32,7 @@ public class TestState extends State{
     @Override
     public void show() {
         System.out.println("TestState Show!");
-        test = gsm.assetManager.getTexture("badlogic.jpg");
+        test = gsm.assetManager.get("badlogic.jpg");
         Gdx.input.setInputProcessor(stage);
         initUI();
     }
@@ -41,7 +41,7 @@ public class TestState extends State{
     public void update(float delta) {
         if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
             System.out.println("Transitioning to new TestState!");
-            gsm.transitionTo(new TestState(this.gsm, new Color(0.2f, 0.8f, 1.0f, 0.2f)));
+            gsm.transitionTo(new LoadingState(this.gsm));
         }
         stage.act();
     }
